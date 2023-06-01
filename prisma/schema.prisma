@@ -1,0 +1,98 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model User {
+  id          String     @id @default(uuid())
+  email       String     @unique
+  name        String     @db.VarChar(255)
+  password    String     @db.VarChar(255)
+  createdAt   DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime   @default(now()) @db.Timestamp(0)
+  iteneraries Itenerary[]
+
+  @@map("user")
+}
+
+model Destination {
+  id          String       @id @default(uuid())
+  image_path  String       @db.VarChar(255)
+  name        String       @db.VarChar(255)
+  about       String       @db.Text
+  attractions Attraction[]
+  itenerary   Itenerary[]
+  souvenirs   Souvenir[]
+
+  @@map("destination")
+}
+
+model Souvenir {
+  id            String      @id @default(uuid())
+  image_path    String      @db.VarChar(255)
+  name          String      @db.VarChar(255)
+  about         String      @db.Text
+  address       String      @db.VarChar(255)
+  close_hour    String      @db.Char(6)
+  maps_link     String      @db.VarChar(255)
+  open_hour     String      @db.Char(6)
+  destination   Destination @relation(fields: [destinationId], references: [id])
+  destinationId String  
+
+  @@map("souvenir")
+}
+
+model Attraction {
+  id                 String                 @id @default(uuid())
+  image_path         String                 @db.VarChar(255)
+  name               String                 @db.VarChar(255)
+  about              String                 @db.Text
+  address            String                 @db.VarChar(255)
+  close_hour         String                 @db.Char(6)
+  maps_link          String                 @db.VarChar(255)
+  open_hour          String                 @db.Char(6)
+  recomendation_time String                 @db.VarChar(255)
+  agendas            AttractionsInAgendas[]
+  destination        Destination            @relation(fields: [destinationId], references: [id])
+  destinationId      String
+
+  @@map("attraction")
+}
+
+model Itenerary {
+  id            String      @id @default(uuid())
+  name          String      @db.VarChar(255)
+  duration      String      @db.VarChar(255)
+  isSaved       Boolean     @db.Bit(1)
+  userId        String     
+  destinationId String
+  agendas       Agenda[]
+  destination   Destination @relation(fields: [destinationId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+
+  @@map("itenerary")
+}
+
+model Agenda {
+  id          String                 @id @default(uuid())
+  day         Int
+  iteneraryId String
+  attractions AttractionsInAgendas[]
+  itenerary   Itenerary              @relation(fields: [iteneraryId], references: [id])
+
+  @@map("agenda")
+}
+
+model AttractionsInAgendas {
+  attractionId String
+  agendaId     String
+  agenda       Agenda     @relation(fields: [agendaId], references: [id])
+  attraction   Attraction @relation(fields: [attractionId], references: [id])
+
+  @@id([attractionId, agendaId])
+}
