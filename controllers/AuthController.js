@@ -2,8 +2,8 @@ const {nanoid} = require('nanoid');
 const {PrismaClient} = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const {validationResult} = require('express-validator');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const auth = require('../middleware/auth');
 
 // Prisma Client Extension: method for User model
 const prisma = new PrismaClient().$extends({
@@ -25,11 +25,6 @@ const prisma = new PrismaClient().$extends({
     },
   },
 });
-
-// Generate JWT Token
-const createToken = (id) => {
-  return jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
-};
 
 module.exports.register = async (req, res) => {
   let {email, name, password} = req.body;
@@ -67,7 +62,7 @@ module.exports.login = async (req, res) => {
   const {email, password} = req.body;
   try {
     const user = await prisma.user.attempt(email, password);
-    const token = createToken(user.id);
+    const token = auth.generateToken(user.id);
     res.cookie('jwt', token);
     return res.status(200).json({
       'success': true,
@@ -80,7 +75,7 @@ module.exports.login = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       'success': false,
-      'message': 'Error. Unable to log in',
+      'message': error.message,
     });
   }
 };
