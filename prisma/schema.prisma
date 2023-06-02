@@ -37,8 +37,8 @@ model Souvenir {
   image_path    String      @db.VarChar(255)
   name          String      @db.VarChar(255)
   about         String      @db.Text
-  latitude    Float      @db.Double
-  longitude    Float      @db.Double
+  latitude      Float       @db.Double
+  longitude     Float       @db.Double
   open_hour     String      @db.Char(6)
   destination   Destination @relation(fields: [destinationId], references: [id])
   destinationId String
@@ -51,8 +51,8 @@ model Attraction {
   image_path         String                 @db.VarChar(255)
   name               String                 @db.VarChar(255)
   about              String                 @db.Text
-  latitude    Float      @db.Double
-  longitude    Float      @db.Double
+  latitude           Float                  @db.Double
+  longitude          Float                  @db.Double
   recomendation_time String                 @db.VarChar(255)
   htm                Int                    @db.Int()
   agendas            AttractionsInAgendas[]
