@@ -1,37 +1,51 @@
 require('dotenv').config();
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require('passport');
+const session = require('express-session');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var destinationsRouter = require('./routes/destinations');
-var attractionsRouter = require('./routes/attractions');
-var souvenirsRouter = require('./routes/souvenirs');
-var itenerariesRouter = require('./routes/iteneraries');
-var registerRouter = require('./routes/register');
-var loginRouter = require('./routes/login');
-
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+require('./config/passport')(passport);
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Session
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {secure: true},
+}));
 
-// User Route
-app.use('/register', registerRouter);
-app.use('/login', loginRouter)
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Main Feature Route
-app.use('/destinations', destinationsRouter);
-app.use('/attractions', attractionsRouter);
-app.use('/souvenirs', souvenirsRouter);
-app.use('/iteneraries',itenerariesRouter);
+// Routes
+// const {indexRouter, usersRouter} = require('./routes/routes');
+const authRoutes = require('./routes/auth');
+const destinationRoutes = require('./routes/destination');
+const attractionRoutes = require('./routes/attraction');
+const souvenirRoutes = require('./routes/souvenir');
+const userRoutes = require('./routes/user');
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+
+// User Authentication
+app.use('/auth', authRoutes);
+
+// User Routes
+app.use('/user', userRoutes);
+
+// Main Routes
+app.use('/destination', destinationRoutes);
+app.use('/attraction', attractionRoutes);
+app.use('/souvenir', souvenirRoutes);
 
 module.exports = app;
