@@ -28,7 +28,7 @@ const prisma = new PrismaClient().$extends({
 
 // Generate JWT Token
 const createToken = (id) => {
-  return jwt.sign({id}, process.env.ACCESS_TOKEN_SECRET);
+  return jwt.sign(id, process.env.ACCESS_TOKEN_SECRET);
 };
 
 module.exports.register = async (req, res) => {
