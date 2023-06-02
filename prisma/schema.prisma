@@ -9,12 +9,12 @@ datasource db {
 }
 
 model User {
-  id          String     @id @default(uuid())
-  email       String     @unique
-  name        String     @db.VarChar(255)
-  password    String     @db.VarChar(255)
-  createdAt   DateTime   @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime   @default(now()) @db.Timestamp(0)
+  id          String      @id @default(uuid())
+  email       String      @unique
+  name        String      @db.VarChar(255)
+  password    String      @db.VarChar(255)
+  createdAt   DateTime    @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime    @default(now()) @db.Timestamp(0)
   iteneraries Itenerary[]
 
   @@map("user")
@@ -42,7 +42,7 @@ model Souvenir {
   maps_link     String      @db.VarChar(255)
   open_hour     String      @db.Char(6)
   destination   Destination @relation(fields: [destinationId], references: [id])
-  destinationId String  
+  destinationId String
 
   @@map("souvenir")
 }
@@ -53,10 +53,9 @@ model Attraction {
   name               String                 @db.VarChar(255)
   about              String                 @db.Text
   address            String                 @db.VarChar(255)
-  close_hour         String                 @db.Char(6)
   maps_link          String                 @db.VarChar(255)
-  open_hour          String                 @db.Char(6)
   recomendation_time String                 @db.VarChar(255)
+  htm                Int                    @db.Int()
   agendas            AttractionsInAgendas[]
   destination        Destination            @relation(fields: [destinationId], references: [id])
   destinationId      String
@@ -69,7 +68,7 @@ model Itenerary {
   name          String      @db.VarChar(255)
   duration      String      @db.VarChar(255)
   isSaved       Boolean     @db.Bit(1)
-  userId        String     
+  userId        String
   destinationId String
   agendas       Agenda[]
   destination   Destination @relation(fields: [destinationId], references: [id])
