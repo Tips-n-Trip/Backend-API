@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-module.exports.generateToken = (req, res, next) => {
-  return jwt.sign(req, process.env.ACCESS_TOKEN_SECRET);
+module.exports.generateToken = (id) => {
+  return jwt.sign({id},
+      process.env.ACCESS_TOKEN_SECRET,
+      {expiresIn: 1000*60*60*24*14});
 };
 
 module.exports.authenticateToken = (req, res, next) => {
@@ -19,14 +21,14 @@ module.exports.authenticateToken = (req, res, next) => {
       'message': 'Invalid authorization',
     });
   }
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, token) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, id) => {
     if (error) {
       return res.status(403).json({
         'success': false,
         'message': 'Invalid JWT Token',
       });
     };
-    req.token = token;
+    req.id = id;
     next();
   });
 };
