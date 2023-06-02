@@ -3,7 +3,8 @@ const prisma = new PrismaClient();
 
 module.exports.profile = async (req, res) => {
   try {
-    const {id} = req.token;
+    const {id} = req.id;
+    console.log(id);
     const {name, email, iteneraries} = await prisma.user.findUnique(
         {
           where: {
@@ -17,7 +18,7 @@ module.exports.profile = async (req, res) => {
     const user = {name, email, total_iteneraries};
     return res.status(200).json({
       'success': true,
-      'message': 'data has found',
+      'message': 'User profile found',
       user,
     });
   } catch (error) {
