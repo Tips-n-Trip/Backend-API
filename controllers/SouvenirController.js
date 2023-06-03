@@ -4,11 +4,17 @@ const prisma = new PrismaClient();
 module.exports.index = async (req, res) => {
   await prisma.$connect();
   try {
-    const souvenirs = await prisma.souvenir.findMany();
+    let souvenirs = [];
+    const size = req.query.size;
+    if (size) {
+      souvenirs = await prisma.souvenir.findMany({take: Number(size)});
+    } else {
+      souvenirs = await prisma.souvenir.findMany();
+    }
     return res.status(200).json({
       'success': true,
       'message': 'found',
-      'data': souvenirs,
+      souvenirs,
     });
   } catch (error) {
     res.status(500).json({
@@ -35,9 +41,7 @@ module.exports.detail = async (req, res) => {
     return res.status(200).json({
       'success': true,
       'message': 'Data ditemukan',
-      'data': {
-        souvenir,
-      },
+      souvenir,
     });
   } catch (error) {
     return res.status(404).json({

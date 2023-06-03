@@ -4,7 +4,13 @@ const prisma = new PrismaClient();
 module.exports.index = async (req, res) => {
   await prisma.$connect();
   try {
-    const destinations = await prisma.destination.findMany();
+    let destinations = [];
+    const size = req.query.size;
+    if (size) {
+      destinations = await prisma.destination.findMany({take: Number(size)});
+    } else {
+      destinations = await prisma.destination.findMany();
+    }
     if (destinations.length < 1) {
       res.status(200).json({
         'success': true,
@@ -15,9 +21,7 @@ module.exports.index = async (req, res) => {
       res.status(200).json({
         'success': true,
         'message': 'Data tersedia',
-        'data': {
-          destinations,
-        },
+        destinations,
       });
     }
   } catch (error) {
@@ -32,6 +36,7 @@ module.exports.index = async (req, res) => {
 module.exports.detail = async (req, res) => {
   try {
     const destinationId = req.params.id;
+    console.log(destinationId);
     const destination = await prisma.destination.findUnique(
         {
           where: {
@@ -49,14 +54,14 @@ module.exports.detail = async (req, res) => {
     return res.status(200).json({
       'success': true,
       'message': 'Data ditemukan',
-      'data': {
-        destination,
-      },
+      destination,
+      'total_objek': destination.attractions.length,
+      'total_sentra': destination.attractions.length,
     });
   } catch (error) {
     return res.status(404).json({
       'success': false,
-      'message': error,
+      'message': 'Request not found',
     });
   }
 };
