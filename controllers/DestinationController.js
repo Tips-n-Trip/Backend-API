@@ -5,11 +5,25 @@ module.exports.index = async (req, res) => {
   await prisma.$connect();
   try {
     let destinations = [];
+    const item = 5;
     const size = req.query.size;
+    const page = req.query.page;
     if (size) {
-      destinations = await prisma.destination.findMany({take: Number(size)});
+      destinations = await prisma.destination.findMany(
+          {
+            take: Number(size),
+          },
+      );
+      if (page) {
+        destinations = await prisma.destination.findMany(
+            {
+              take: Number(size),
+              skip: Number(size)*Number(page),
+            },
+        );
+      }
     } else {
-      destinations = await prisma.destination.findMany();
+      destinations = await prisma.destination.findMany({take: Number(item)});
     }
     if (destinations.length < 1) {
       res.status(200).json({

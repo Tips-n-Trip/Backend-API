@@ -5,11 +5,25 @@ module.exports.index = async (req, res) => {
   await prisma.$connect();
   try {
     let souvenirs = [];
+    const item = 5;
     const size = req.query.size;
+    const page = req.query.page;
     if (size) {
-      souvenirs = await prisma.souvenir.findMany({take: Number(size)});
+      souvenirs = await prisma.souvenir.findMany(
+          {
+            take: Number(size),
+          },
+      );
+      if (page) {
+        souvenirs = await prisma.souvenir.findMany(
+            {
+              take: Number(size),
+              skip: Number(size)*Number(page),
+            },
+        );
+      }
     } else {
-      souvenirs = await prisma.souvenir.findMany();
+      souvenirs = await prisma.souvenir.findMany({take: Number(item)});
     }
     return res.status(200).json({
       'success': true,
@@ -32,6 +46,13 @@ module.exports.detail = async (req, res) => {
         {
           where: {
             id: souvenirId,
+          },
+          include: {
+            destination: {
+              select: {
+                name,
+              },
+            },
           },
         },
     );
