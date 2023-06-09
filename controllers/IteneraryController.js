@@ -8,16 +8,7 @@ module.exports.generate = async (req, res) => {
   try {
     const {destination, duration, budget} = req.body;
     const input = {destination, duration, budget};
-    // const response = await axios.post(process.env.MODEL_API_URL, input);
-    const response = {'attractions':
-    [
-      {'place_name': 'Ekowisata Mangrove Wonorejo'},
-      {'place_name': 'Taman Harmoni Keputih'},
-      {'place_name': 'Air Mancur Menari'},
-      {'place_name': 'Ekowisata Mangrove Wonorejo'},
-      {'place_name': 'Taman Harmoni Keputih'},
-      {'place_name': 'Air Mancur Menari'},
-    ]};
+    const response = await axios.post(process.env.MODEL_API_URL, input);
     const attractionNameList = response.attractions;
     const dest = await prisma.destination.findFirst({
       where: {
@@ -38,8 +29,8 @@ module.exports.generate = async (req, res) => {
     const setItinerary = async () => {
       const newItenerary = await prisma.itenerary.create({
         data: {
-          name: duration.concat(' hari di ' + destination),
-          duration: duration,
+          name: String(duration).concat(' hari di ' + destination),
+          duration: Number(duration),
           destination: {
             connect: {id: dest.id},
           },
