@@ -3,8 +3,7 @@ const prisma = new PrismaClient();
 
 module.exports.profile = async (req, res) => {
   try {
-    const {id} = req.id;
-    console.log(id);
+    const {id} = req.token;
     const {name, email, iteneraries} = await prisma.user.findUnique(
         {
           where: {
@@ -22,6 +21,9 @@ module.exports.profile = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error(error.message);
+    return res.status(500).json({
+      'success': false,
+      'message': 'Internal Server error',
+    });
   }
 };
