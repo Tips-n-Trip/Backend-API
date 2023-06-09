@@ -34,6 +34,7 @@ const destinationRoutes = require('./routes/destination');
 const attractionRoutes = require('./routes/attraction');
 const souvenirRoutes = require('./routes/souvenir');
 const userRoutes = require('./routes/user');
+const iteneraryRoutes = require('./routes/itenerary');
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 
@@ -47,5 +48,6 @@ app.use('/user', userRoutes);
 app.use('/destination', destinationRoutes);
 app.use('/attraction', attractionRoutes);
 app.use('/souvenir', souvenirRoutes);
+app.use('/itenerary', iteneraryRoutes);
 
 module.exports = app;
