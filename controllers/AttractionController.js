@@ -5,7 +5,6 @@ module.exports.index = async (req, res) => {
   await prisma.$connect();
   try {
     let attractions = [];
-    let souvenirs = [];
     const item = 5;
     const size = req.query.size;
     const page = req.query.page;
