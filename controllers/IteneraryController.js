@@ -9,14 +9,14 @@ module.exports.generate = async (req, res) => {
     const {id} = req.token;
     const {destination, duration, budget} = req.body;
     const input = {destination, duration, budget};
-    // const response = await axios.post(process.env.MODEL_API_URL, input);
-    const response = {
-      attractions: [
-        {'place_name': 'Ekowisata Mangrove Wonorejo'},
-        {'place_name': 'Taman Harmoni Keputih'},
-        {'place_name': 'Air Mancur Menari'},
-      ],
-    };
+    const response = await axios.post(process.env.MODEL_API_URL, input);
+    // const response = {
+    //   attractions: [
+    //     {'place_name': 'Ekowisata Mangrove Wonorejo'},
+    //     {'place_name': 'Taman Harmoni Keputih'},
+    //     {'place_name': 'Air Mancur Menari'},
+    //   ],
+    // };
     const attractionNameList = response.attractions;
     console.log(attractionNameList);
     const dest = await prisma.destination.findFirst({
