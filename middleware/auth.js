@@ -8,14 +8,14 @@ module.exports.generateToken = (id) => {
 
 module.exports.authenticateToken = (req, res, next) => {
   const authHeader = req.get('authorization');
-  if (authHeader === null) {
+  if (authHeader === undefined) {
     return res.status(401).json({
       'success': false,
       'message': 'Missing Authorization header',
     });
   }
   const token = authHeader.split(' ')[1];
-  if (token === null) {
+  if (token === undefined) {
     return res.status(401).json({
       'success': false,
       'message': 'Invalid authorization',
