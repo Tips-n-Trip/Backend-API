@@ -37,12 +37,13 @@ model Souvenir {
   image_path    String      @db.VarChar(255)
   name          String      @db.VarChar(255)
   about         String      @db.Text
-  latitude      Float       @db.Double
-  longitude     Float       @db.Double
   open_hour     String      @db.Char(6)
-  destination   Destination @relation(fields: [destinationId], references: [id])
   destinationId String
+  latitude      Float
+  longitude     Float
+  destination   Destination @relation(fields: [destinationId], references: [id])
 
+  @@index([destinationId], map: "souvenir_destinationId_fkey")
   @@map("souvenir")
 }
 
@@ -51,21 +52,22 @@ model Attraction {
   image_path         String                 @db.VarChar(255)
   name               String                 @db.VarChar(255)
   about              String                 @db.Text
-  latitude           Float                  @db.Double
-  longitude          Float                  @db.Double
   recomendation_time String                 @db.VarChar(255)
-  htm                Int                    @db.Int()
+  destinationId      String
+  htm                Int
+  latitude           Float
+  longitude          Float
   agendas            AttractionsInAgendas[]
   destination        Destination            @relation(fields: [destinationId], references: [id])
-  destinationId      String
 
+  @@index([destinationId], map: "attraction_destinationId_fkey")
   @@map("attraction")
 }
 
 model Itenerary {
   id            String      @id @default(uuid())
   name          String      @db.VarChar(255)
-  duration      Int   
+  duration      Int
   isSaved       Boolean     @db.Bit(1)
   userId        String
   destinationId String
@@ -73,6 +75,8 @@ model Itenerary {
   destination   Destination @relation(fields: [destinationId], references: [id])
   user          User        @relation(fields: [userId], references: [id])
 
+  @@index([destinationId], map: "itenerary_destinationId_fkey")
+  @@index([userId], map: "itenerary_userId_fkey")
   @@map("itenerary")
 }
 
@@ -83,6 +87,7 @@ model Agenda {
   attractions AttractionsInAgendas[]
   itenerary   Itenerary              @relation(fields: [iteneraryId], references: [id])
 
+  @@index([iteneraryId], map: "agenda_iteneraryId_fkey")
   @@map("agenda")
 }
 
@@ -93,4 +98,5 @@ model AttractionsInAgendas {
   attraction   Attraction @relation(fields: [attractionId], references: [id])
 
   @@id([attractionId, agendaId])
+  @@index([agendaId], map: "AttractionsInAgendas_agendaId_fkey")
 }
