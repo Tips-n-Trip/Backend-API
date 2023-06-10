@@ -65,7 +65,7 @@ model Attraction {
 model Itenerary {
   id            String      @id @default(uuid())
   name          String      @db.VarChar(255)
-  duration      String      @db.VarChar(255)
+  duration      Int   
   isSaved       Boolean     @db.Bit(1)
   userId        String
   destinationId String
