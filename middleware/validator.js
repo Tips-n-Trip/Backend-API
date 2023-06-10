@@ -57,3 +57,18 @@ module.exports.authenticate = [
       notEmpty().
       isLength({min: 8}),
 ];
+
+module.exports.validate = [
+  check('duration').
+      trim().
+      isInt().
+      bail().
+      notEmpty().
+      bail(),
+  check('budget').
+      trim().
+      notEmpty().
+      bail().
+      isInt().
+      bail(),
+];
