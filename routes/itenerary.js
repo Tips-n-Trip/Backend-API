@@ -9,8 +9,10 @@ router.post('/',
     validator.validate,
     IteneraryController.generate);
 
-router.get('/list', (req, res, next) => {
-  res.send('Halaman Daftar Itenerary');
-});
+router.get('/list', auth.authenticateToken, IteneraryController.list);
+
+router.get('/save/:id', auth.authenticateToken, IteneraryController.save);
+
+router.get('/delete/:id', auth.authenticateToken, IteneraryController.delete);
 
 module.exports = router;
