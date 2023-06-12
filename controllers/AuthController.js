@@ -10,7 +10,7 @@ const prisma = new PrismaClient().$extends({
   model: {
     user: {
       async attempt(email, password) {
-        const user = await prisma.user.findFirst({where: {
+        const user = await prisma.user.findUnique({where: {
           email: email,
         }});
         if (user) {
@@ -63,7 +63,6 @@ module.exports.login = async (req, res) => {
   try {
     const user = await prisma.user.attempt(email, password);
     const token = auth.generateToken(user.id);
-    res.cookie('jwt', token);
     return res.status(200).json({
       'success': true,
       'message': 'User has logged in',
@@ -76,7 +75,7 @@ module.exports.login = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       'success': false,
-      'message': error.message,
+      'message': 'Unable to login',
     });
   }
 };
