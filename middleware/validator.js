@@ -7,7 +7,7 @@ const {body} = new ExpressValidator({
       where: {email: value},
     });
     if (user) {
-      throw new Error('Email telah terdaftar');
+      throw Error('Email telah terdaftar');
     }
   },
 }, {
@@ -16,8 +16,9 @@ const {body} = new ExpressValidator({
       where: {email: value},
     });
     if (!user) {
-      throw new Error('Email belum terdaftar');
+      return Error('Email belum terdaftar');
     }
+    return value;
   }});
 
 module.exports.store = [
