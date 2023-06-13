@@ -13,6 +13,8 @@ router.get('/list', auth.authenticateToken, IteneraryController.list);
 
 router.get('/save/:id', auth.authenticateToken, IteneraryController.save);
 
+router.get('/unsave/:id', auth.authenticateToken, IteneraryController.unsave);
+
 router.get('/delete/:id', auth.authenticateToken, IteneraryController.delete);
 
 module.exports = router;
