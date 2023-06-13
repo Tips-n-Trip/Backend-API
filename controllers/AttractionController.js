@@ -26,7 +26,14 @@ module.exports.index = async (req, res) => {
         );
       }
     } else {
-      attractions = await prisma.attraction.findMany({take: Number(item)});
+      attractions = await prisma.attraction.findMany(
+          {
+            take: Number(item),
+            include: {
+              destination: true,
+            },
+          },
+      );
     }
     return res.status(200).json({
       'success': true,
