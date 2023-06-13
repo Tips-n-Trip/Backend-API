@@ -9,7 +9,11 @@ module.exports.profile = async (req, res) => {
           where: {
             id: id,
           }, include: {
-            iteneraries: true,
+            iteneraries: {
+              where: {
+                isSaved: true,
+              },
+            },
           },
         },
     );
