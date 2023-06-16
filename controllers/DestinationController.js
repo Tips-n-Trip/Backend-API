@@ -70,7 +70,7 @@ module.exports.detail = async (req, res) => {
       'message': 'Data ditemukan',
       destination,
       'total_objek': destination.attractions.length,
-      'total_sentra': destination.attractions.length,
+      'total_sentra': destination.souvenirs.length,
     });
   } catch (error) {
     return res.status(404).json({
